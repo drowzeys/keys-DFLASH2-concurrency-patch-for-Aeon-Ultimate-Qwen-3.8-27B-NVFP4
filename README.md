@@ -7,6 +7,17 @@ exploiting that headroom end-to-end through an agent gateway.
 Model: **Qwen3.8-27B-AEON-ULTIMATE-UNCENSORED-NVFP4** (dense), draft
 **z-lab/Qwen3.8-27B-DFlash2**. All numbers measured 2026-08-29.
 
+## Quick start
+
+One-shot: serve the model with every fix and point your agent gateway's main model **and
+all subagents** at it — see **[RECIPE.md](RECIPE.md)**.
+
+```bash
+MODEL=/abs/path/Qwen3.8-27B-AEON-ULTIMATE-UNCENSORED-NVFP4 \
+DRAFT=/abs/path/Qwen3.8-27B-DFlash2 \
+./setup-aeon.sh
+```
+
 ## The arc
 
 1. **The ceiling.** DFlash2 (a block-diffusion speculative drafter) gives a big
@@ -42,6 +53,7 @@ Model: **Qwen3.8-27B-AEON-ULTIMATE-UNCENSORED-NVFP4** (dense), draft
 
 | Path | What |
 |---|---|
+| `setup-aeon.sh` / `RECIPE.md` | **One-shot**: serve + point hermes' model and all subagents at aeon, applying every fix |
 | `docs/01-…` | DFlash2 concurrency ceiling + the vLLM spec-width taper (Qwen3.8-27B-AEON case study) |
 | `docs/03-…` | Hermes 17k-prefill slowdown → prefix caching |
 | `docs/04-…` | Async subagent delegation + the per-task-model patch |
