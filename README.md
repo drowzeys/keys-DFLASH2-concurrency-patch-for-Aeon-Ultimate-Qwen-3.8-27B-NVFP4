@@ -18,6 +18,30 @@ DRAFT=/abs/path/Qwen3.8-27B-DFlash2 \
 ./setup-aeon.sh
 ```
 
+## Results — the fix, measured
+
+Concurrency sweep on one DGX Spark (GB10), Qwen3.8-27B-AEON-NVFP4, 256 exact
+tokens/request, aggregate tok/s. **Before** = plain DFlash2 `n=7`. **After** = the
+spec-width taper. Higher is better.
+
+| Concurrency | Before (flat `n=7`) | **After (taper)** | speedup |
+|---|---|---|---|
+| C1 | 22 | 21.3 | latency kept |
+| C2 | 42 | 40.2 | latency kept |
+| C4 | 40 | **69.6** | **1.7×** |
+| C8 | **41** ← flatlined | **92.9** | **2.3×** |
+
+Before, aggregate throughput **flatlined at ~41 tok/s from C2 onward** — extra
+concurrency only inflated TTFT (250 ms → 24–38 s). After, it **scales to ~93 tok/s at
+C8 while keeping the C1/C2 single-stream latency**, and TTFT stays flat. Re-measured on
+the live deployed endpoint: **C1 20.9 / C4 66.7 / C8 90.7**. Direct 3-way proof:
+`running=3` sustained, 3×256 tokens in **11.8 s wall** (vs ~33 s if serialized).
+
+For reference, pure dense (spec off) scales too but loses the single-stream win
+(C1 11.5 / C8 85.7); the taper matches its high-concurrency throughput **and** keeps
+speculation's low-latency C1. Full tables incl. the abrupt-cut thrash and acceptance
+rates: [benchmarks/results.md](benchmarks/results.md).
+
 ## The arc
 
 1. **The ceiling.** DFlash2 (a block-diffusion speculative drafter) gives a big
