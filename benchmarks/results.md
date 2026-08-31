@@ -20,18 +20,6 @@ Spec acceptance (gentle taper): rises 23% → 65% as batch fills.
 Live deployed endpoint re-measure (gentle taper, seqs=8): C1 20.9 / C4 66.7 / C8 90.7.
 Direct 3-concurrent proof: running=3 sustained, 3×256-tok in 11.8 s wall.
 
-## Mac — oMLX GLM-5.3-Flash oQ4 (aggregate tok/s)
-
-| C | deployed DFlashEngine (no batching) | batched (no spec) | paged continuous-batched spec |
-|---|---|---|---|
-| 1 | 39.4 | 27.6 | 31.1 |
-| 2 | 33.5 | —    | 37.8 |
-| 4 | 33.5 | 54.6 | 52.6 |
-| 8 | 32.4 | 69.1 | 70.3 |
-
-Continuous-batched spec: 2.26× (c1→c8). Ceiling is the MoE per-token compute
-(verify = 49 ms fixed + 6.3 ms/token); c8=200 not physically reachable.
-
 ## Hermes prefix caching (13.5k-token prompt, warm TTFT)
 
 | run | prefix caching OFF | prefix caching ON |

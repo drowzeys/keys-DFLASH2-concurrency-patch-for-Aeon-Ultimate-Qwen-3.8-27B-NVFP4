@@ -37,10 +37,8 @@ that had been ~30 s dropped to ~15 s, and the remainder is now decode + the mode
 in-band reasoning, **not** re-prefill.
 
 The KV pool stayed at 1.1M tokens at 1M context — a 17k prefix is trivial to cache, so
-nothing was traded away. Qwen3.8-27B is **dense**, so there's no MoE memory blow-up on
-the cached prefill (this is exactly where the Mac GLM-5.3 lane got stuck — a single 17k
-MoE prefill there peaked ~240 GB of 256 GB and thrashed even *with* a cache hit;
-that's a separate, harder problem).
+nothing was traded away. Qwen3.8-27B is **dense**, so there's no memory blow-up on the
+cached prefill.
 
 ## Takeaways
 

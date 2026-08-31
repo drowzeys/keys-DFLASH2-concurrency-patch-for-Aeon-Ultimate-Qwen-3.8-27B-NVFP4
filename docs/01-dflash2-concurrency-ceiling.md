@@ -53,9 +53,9 @@ positions instead of `C×1`. For a model that is only bandwidth-bound at low tok
 counts, that **8× position inflation** tips the verify into *compute*-bound at high
 concurrency, and cancels the amortization → flat 42.
 
-This is the same wall the Mac MoE lane hit ("batching amortizes only the fixed part
-of verify; per-token compute is the hard wall") — here the per-token cost is the
-spec-inflated attention/matmul rather than MoE experts.
+The general principle: batching amortizes only the *fixed* part of the verify; the
+per-token compute is the hard wall. Here the per-token cost is the spec-inflated
+attention/matmul, so narrowing the spec width at high batch is what unblocks it.
 
 ## The fix: taper the speculative width by running batch size
 
